@@ -5,8 +5,8 @@ class Bullet:
         self.appearance = 'rectangle'
         self.speed = 10
         self.damage = 10
-        self.position = np.array([position[0]-3, position[1]-3, position[0]+3, position[1]+3])
-        self.direction = {'up' : False, 'down' : False, 'left' : False, 'right' : False}
+        self.position = np.array([position[0]-2, position[1]-2, position[0]+2, position[1]+2])
+        self.direction = {'up' : False, 'down' : False, 'left' : False, 'right' : False, 'static' : False}
         self.state = None
         self.outline = "#0000FF"
         if command['up_pressed']:
@@ -17,6 +17,9 @@ class Bullet:
             self.direction['right'] = True
         if command['left_pressed']:
             self.direction['left'] = True
+        # if command['A_pressed']:
+        #     self.direction['static'] = True
+            
 
         
 
@@ -36,6 +39,10 @@ class Bullet:
         if self.direction['right']:
             self.position[0] += self.speed
             self.position[2] += self.speed
+        
+        # if self.direction['static']:
+        #     self.position[0] -= self.speed
+        #     self.position[2] += self.speed
             
     def collision_check(self, enemys):
         for enemy in enemys:

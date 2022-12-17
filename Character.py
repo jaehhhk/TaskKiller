@@ -6,7 +6,8 @@ class Character:
         self.appearance = Image.open("/home/jaehyeok/Desktop/TaskKiller/Image/laptop.png").convert("RGBA")
         print(self.appearance)
         self.state = None
-        self.position = np.array([width-150, height-50, width, height])
+        self.item = 0
+        self.position = np.array([width-150, height-50, width-150, height-50])
         # 총알 발사를 위한 캐릭터 중앙 점 추가
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
         self.outline = "#FFFFFF"
