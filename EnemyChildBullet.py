@@ -45,17 +45,16 @@ class EnemyChildBullet:
         #     self.position[0] -= self.speed
         #     self.position[2] += self.speed
             
-    def collision_check(self, enemys):
-        for enemy in enemys:
-            collision = self.overlap(self.position, enemy.position)
-            
-            if collision:
-                enemy.health -= 1
-                if enemy.health == 0:
-                    enemy.state = 'die'
-                self.state = 'hit'
+    def collision_check(self, laptop):
+        collision = self.overlap(self.position, laptop.position)
+        
+        if collision:
+            laptop.health -= 1
+            if laptop.health == 0:
+                laptop.state = 'die'
+            self.state = 'hit'
 
-    def overlap(self, bullet_position, enemy_position):
+    def overlap(self, bullet_position, laptop_position):
         '''
         두개의 사각형(bullet position, enemy position)이 겹치는지 확인하는 함수
         좌표 표현 : [x1, y1, x2, y2]
@@ -65,4 +64,4 @@ class EnemyChildBullet:
             False : if not overlap
         '''   
         #return bullet_position[1] < enemy_position[3] and enemy_position[2] < bullet_position[0]
-        return enemy_position[0] < bullet_position[2] < enemy_position[2] and bullet_position[1] < enemy_position[3]
+        return laptop_position[0] < bullet_position[2] < laptop_position[2] and bullet_position[1] > laptop_position[3]

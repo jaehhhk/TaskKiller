@@ -89,30 +89,39 @@ def main():
             command['move'] = True
         
         if not joystick.button_A.value: # A pressed
-            command['A_pressed'] = True
-            bullet = Bullet(laptop.center, command)
-            bullets.append(bullet)
+            #command['A_pressed'] = True
+            if command['move'] == True:
+                bullet = Bullet(laptop.center, command)
+                bullets.append(bullet)
             
         laptop.move(command)
         for bullet in bullets:
             bullet.collision_check(enemys)
             bullet.move()
-        
-        print(command_list[rd.randrange(len(command_list))])
+
+        # 캐릭터가 총알을 쏘는 로직을 응용하여 랜덤으로 command를 받도록 했다.
+        # 난이도 조절을 위해 command_list의 요소들 중간중간 null 값을 넣어주었다.
         db_bullet = EnemyChildBullet(enemy_DB.center, command_list[rd.randrange(len(command_list))])
         esw_bullet = EnemyChildBullet(enemy_ESW.center, command_list[rd.randrange(len(command_list))])
         syspro_bullet = EnemyChildBullet(enemy_SYSPRO.center, command_list[rd.randrange(len(command_list))])
         oop_bullet = EnemyChildBullet(enemy_OOP.center, command_list[rd.randrange(len(command_list))])
                                 
+        if enemy_DB in enemys:
+            db_bullets.append(db_bullet)
         
-        db_bullets.append(db_bullet)
-        db_bullets.append(esw_bullet)
-        db_bullets.append(syspro_bullet)
-        db_bullets.append(oop_bullet)
+        if enemy_ESW in enemys:
+            db_bullets.append(esw_bullet)
+        
+        if enemy_SYSPRO in enemys:
+            db_bullets.append(syspro_bullet)
+        
+        if enemy_OOP in enemys:    
+            db_bullets.append(oop_bullet)
+        
         for child_bullet in db_bullets:
             child_bullet.move()
+            child_bullet.collision_check(laptop)
             
-            #bullet.collision_check(enemys)
 
         
         my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
@@ -132,22 +141,19 @@ def main():
             elif enemy.state == 'die':
                 enemys.remove(enemy)
                 break
+                
         
         for db_bullet in db_bullets:
             if db_bullet.state !='hit':
                 my_draw.rectangle(tuple(db_bullet.position), outline = db_bullet.outline, fill = (235, 51, 36))
-        
+            else:
+                db_bullets.remove(db_bullet)
+                                        
         for bullet in bullets:
             if bullet.state != 'hit':
-                if (command['A_pressed'] == True) and (command['up_pressed']  == False) and (command['down_pressed']  == False) and (command['right_pressed']  == False) and (command['left_pressed']  == False):
-                    my_draw.rectangle(tuple(bullet.position), outline = bullet.outline, fill = (0, 0, 0, 0))
-                    bullets.remove(bullet)
-                                       
                 my_draw.rectangle(tuple(bullet.position), outline = bullet.outline, fill = (0, 0, 255))
             else:
-                bullets.remove(bullet)
-                
-                
+                bullets.remove(bullet)             
         joystick.disp.image(my_image)        
 
 if __name__ == '__main__':
