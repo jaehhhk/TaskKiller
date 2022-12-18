@@ -13,11 +13,10 @@ from EnemyDB import EnemyDB
 from EnemyESW import EnemyESW
 from EnemyOOP import EnemyOOP
 from EnemySYSPRO import EnemySYSPRO
-from SYSPROBullet import SYSPROBullet
 from EnemyChildBullet import EnemyChildBullet
-from OOPBullet import OOPBullet
-from ESWBullet import ESWBullet
+from EnemyBossBullet import EnemyBossBullet
 from Bullet import Bullet
+from ItemBullet import ItemBullet
 from Character import Character
 from ChromeItem import ChromeItem
 from GithubItem import GithubItem
@@ -25,6 +24,9 @@ from GithubItem import GithubItem
 from Joystick import Joystick
 
 def main():
+    
+    
+    
     health1 = Health((0,0))
     health2 = Health((20,0))
     health3 = Health((40,0))
@@ -51,6 +53,11 @@ def main():
     my_image = Image.new("RGB", (joystick.width, joystick.height))
     my_draw = ImageDraw.Draw(my_image)
     my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
+    
+    #my_image.paste(health1.appearance, (health1.position[0], health1.position[1]),health1.appearance)
+    
+    # for health in health_list:
+    #     my_image.paste(health.appearance, (health.position[0], health.position[1]),health.appearance)
     #enemy_boss_image = Image.open("/home/jaehyeok/Desktop/TaskKiller/Image/enemy_boss.png")
     #enemy_boss_image = enemy_boss_image.resize((100, 28))
     #laptop = Image.open("/home/jaehyeok/Desktop/TaskKiller/Image/laptop.png")
@@ -58,18 +65,39 @@ def main():
     #my_image.paste(enemy_boss_image, (70,0))
     #my_image.paste(laptop, (100, 200))
     
+    
+
+    while True:
+        start_img = Image.open("/home/jaehyeok/Desktop/TaskKiller/Image/start.png")
+        my_image.paste(start_img, (0,0), start_img)
+        
+        if not joystick.button_A.value: # A pressed
+            break
+        
+
+    
     # 캐릭터 총알 리스트
     bullets = []
+    item_bullets = []
     
     # 적들 총알 리스트
     db_bullets = []
     
     trash_bullet = []
-    
-    
+        
     joystick.disp.image(my_image)
     laptop = Character(joystick.width, joystick.height)
     my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
+    
+
+
+
+    # if laptop.health == 2:
+    #     health_list.pop()
+    # if laptop.health == 1:
+    #     health_list.pop()
+    # if laptop.health == 0:
+    #     my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
     
     while True:
 
@@ -99,17 +127,31 @@ def main():
                 bullet = Bullet(laptop.center, command)
                 bullets.append(bullet)
             
+        if not joystick.button_B.value: # B presseed
+            if laptop.item == 2:
+                if command['move'] == True:
+                    item_bullet = ItemBullet(laptop.center, command)
+                    item_bullets.append(item_bullet)
+                         
+            
         laptop.move(command)
+        
         for bullet in bullets:
             bullet.collision_check(enemys)
             bullet.move()
 
+        for item_bullet in item_bullets:
+            item_bullet.collision_check(enemys)
+            item_bullet.move()
+            
         # 캐릭터가 총알을 쏘는 로직을 응용하여 랜덤으로 command를 받도록 했다.
         # 난이도 조절을 위해 command_list의 요소들 중간중간 null 값을 넣어주었다.
         db_bullet = EnemyChildBullet(enemy_DB.center, command_list[rd.randrange(len(command_list))])
         esw_bullet = EnemyChildBullet(enemy_ESW.center, command_list[rd.randrange(len(command_list))])
         syspro_bullet = EnemyChildBullet(enemy_SYSPRO.center, command_list[rd.randrange(len(command_list))])
         oop_bullet = EnemyChildBullet(enemy_OOP.center, command_list[rd.randrange(len(command_list))])
+        
+        boss_bullet = EnemyBossBullet(enemy_boss.center, command_list[rd.randrange(len(command_list))])
                                 
         if enemy_DB in enemys:
             db_bullets.append(db_bullet)
@@ -130,7 +172,6 @@ def main():
 
         
         my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
-        #my_image.paste(health2.appearance, (health2.position[0], health2.position[1]),health2.appearance)
         my_image.paste(enemy_boss.appearance, (enemy_boss.position[0], enemy_boss.position[1]),enemy_boss.appearance)
         # my_image.paste(enemy_DB.appearance, (enemy_DB.position[0], enemy_DB.position[1]),enemy_DB.appearance)
         # my_image.paste(enemy_SYSPRO.appearance, (enemy_SYSPRO.position[0], enemy_SYSPRO.position[1]),enemy_SYSPRO.appearance)
@@ -140,15 +181,24 @@ def main():
         #my_image.paste(chrome_item.appearance, (chrome_item.position[0], chrome_item.position[1]),chrome_item.appearance)
         #my_image.paste(github_item.appearance, (github_item.position[0], github_item.position[1]),github_item.appearance)
         
+        if laptop.health == 3:
+            my_image.paste(health1.appearance, (health1.position[0], health1.position[1]),health1.appearance)
+            my_image.paste(health2.appearance, (health2.position[0], health2.position[1]),health2.appearance)
+            my_image.paste(health3.appearance, (health3.position[0], health3.position[1]),health3.appearance)
+        if laptop.health == 2:
+            my_image.paste(health2.appearance, (health2.position[0], health2.position[1]),health2.appearance)
+            my_image.paste(health3.appearance, (health3.position[0], health3.position[1]),health3.appearance)
+            #my_draw.rectangle(tuple(health3.position), fill=(0, 0, 255))
+        if laptop.health == 1:
+            my_image.paste(health3.appearance, (health3.position[0], health3.position[1]),health3.appearance)
+        
         for item in items:
             if item.state != 'get':
                 my_image.paste(item.appearance, (item.position[0], item.position[1]),item.appearance)
             if item.getItem(laptop):
                 items.remove(item)
-                print(item.state)
                 break
-            
-            
+                     
         
         for enemy in enemys:
             if enemy.state != 'die':
@@ -169,16 +219,48 @@ def main():
                 my_draw.rectangle(tuple(bullet.position), outline = bullet.outline, fill = (0, 0, 255))
             else:
                 bullets.remove(bullet)
+        
+        for item_bullet in item_bullets:
+            if item_bullet.state != 'hit':
+                my_draw.ellipse(tuple(item_bullet.position), outline = item_bullet.outline, fill = (255, 253, 85))
+            else:
+                item_bullets.remove(item_bullet)
                 
-        for health in health_list:
-            if laptop.health == 3:
-                my_image.paste(health.appearance, (health.position[0], health.position[1]),health.appearance)
-            if laptop.health == 2:
-                health_list.pop(-1)
-            if laptop.health == 1:
-                health_list.pop(-1)
-            if laptop.health == 0:
-                health_list.pop(-1)    
+        if len(enemys) == 0:
+            boss_bullets = []
+            if enemy_boss.state != 'die':
+                my_image.paste(enemy_boss.appearance, (enemy_boss.position[0], enemy_boss.position[1]),enemy_boss.appearance)
+                
+                boss_bullets.append(boss_bullet)
+                
+                for child_bullet in db_bullets:
+                    child_bullet.move()
+                    child_bullet.collision_check(laptop)
+                    
+                    
+                    
+            elif enemy_boss.state == 'die':
+                my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
+                break
+                
+        
+        # for health in health_list:
+        #     if laptop.health == 3:
+        #         for i in range(3):
+        #             my_image.paste(health_list[i].appearance, (health_list[i].position[0], health_list[i].position[1]),health_list[i].appearance)
+        #     if laptop.health == 2:
+        #         health_list.pop(-1)
+        #         for i in range(2):
+        #             my_image.paste(health_list[i].appearance, (health_list[i].position[0], health_list[i].position[1]),health_list[i].appearance)
+            
+            # if laptop.health == 2:
+            #     health.state == 'delete'                    
+            # if laptop.health == 2:
+            #     health_list.pop()
+            # if laptop.health == 1:
+            #     health_list.pop()
+            # else: my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
+      
                      
         joystick.disp.image(my_image)        
 

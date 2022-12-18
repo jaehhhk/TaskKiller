@@ -10,7 +10,7 @@ class ChromeItem:
     def getItem(self, laptop):
         get_github = self.overlap(self.position, laptop.position)
         if get_github:
-            laptop.chrome_item += 1
+            laptop.item += 1
             self.state = 'get'
             return True
         else: False
