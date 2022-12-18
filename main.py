@@ -65,16 +65,15 @@ def main():
     #my_image.paste(enemy_boss_image, (70,0))
     #my_image.paste(laptop, (100, 200))
     
-    
+    start_img = Image.open("/home/jaehyeok/Desktop/TaskKiller/Image/start.png")
+    # my_image.paste(start_img, (0,0), start_img)
 
     while True:
-        start_img = Image.open("/home/jaehyeok/Desktop/TaskKiller/Image/start.png")
-        my_image.paste(start_img, (0,0), start_img)
-        
+        my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
+        my_image.paste(start_img, (0,0), start_img) 
         if not joystick.button_A.value: # A pressed
             break
-        
-
+        joystick.disp.image(my_image)    
     
     # 캐릭터 총알 리스트
     bullets = []
