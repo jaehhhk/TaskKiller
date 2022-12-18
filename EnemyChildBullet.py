@@ -64,4 +64,5 @@ class EnemyChildBullet:
             False : if not overlap
         '''   
         #return bullet_position[1] < enemy_position[3] and enemy_position[2] < bullet_position[0]
-        return laptop_position[0] < bullet_position[2] < laptop_position[2] and bullet_position[1] > laptop_position[3]
+        #return bullet_position[0] > laptop_position[0] and laptop_position[1] < bullet_position[1] and laptop_position[3] > bullet_position[3]
+        return laptop_position[0]< bullet_position[2] < laptop_position[2] and laptop_position[1] < bullet_position[3] < laptop_position[3]

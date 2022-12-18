@@ -6,7 +6,8 @@ class Character:
         self.appearance = Image.open("/home/jaehyeok/Desktop/TaskKiller/Image/laptop.png").convert("RGBA")
         print(self.appearance)
         self.state = None
-        self.item = 0
+        self.git_item = 0
+        self.chrome_item = 0
         self.health = 3
         self.position = np.array([width-32, height-32, width+32, height+32])
         # 총알 발사를 위한 캐릭터 중앙 점 추가

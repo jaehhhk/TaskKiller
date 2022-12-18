@@ -8,6 +8,7 @@ import cv2 as cv
 import numpy as np
 from colorsys import hsv_to_rgb
 from EnemyBoss import EnemyBoss
+from Health import Health
 from EnemyDB import EnemyDB
 from EnemyESW import EnemyESW
 from EnemyOOP import EnemyOOP
@@ -24,6 +25,11 @@ from GithubItem import GithubItem
 from Joystick import Joystick
 
 def main():
+    health1 = Health((0,0))
+    health2 = Health((20,0))
+    health3 = Health((40,0))
+    health_list = [health3, health2, health1]
+    
     item_y_position = rd.randrange(130, 210)
     item_x_position = rd.randrange(100, 150)
     chrome_item = ChromeItem(item_y_position, item_x_position)
@@ -57,9 +63,8 @@ def main():
     
     # 적들 총알 리스트
     db_bullets = []
-    oop_bullets = []
-    esw_bullets = []
-    syspro_bullets = []
+    
+    trash_bullet = []
     
     
     joystick.disp.image(my_image)
@@ -125,15 +130,25 @@ def main():
 
         
         my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
+        #my_image.paste(health2.appearance, (health2.position[0], health2.position[1]),health2.appearance)
         my_image.paste(enemy_boss.appearance, (enemy_boss.position[0], enemy_boss.position[1]),enemy_boss.appearance)
         # my_image.paste(enemy_DB.appearance, (enemy_DB.position[0], enemy_DB.position[1]),enemy_DB.appearance)
         # my_image.paste(enemy_SYSPRO.appearance, (enemy_SYSPRO.position[0], enemy_SYSPRO.position[1]),enemy_SYSPRO.appearance)
         # my_image.paste(enemy_ESW.appearance, (enemy_ESW.position[0], enemy_ESW.position[1]),enemy_ESW.appearance)
         # my_image.paste(enemy_OOP.appearance, (enemy_OOP.position[0], enemy_OOP.position[1]),enemy_OOP.appearance)
         my_image.paste(laptop.appearance, (laptop.position[0], laptop.position[1]),laptop.appearance)
-        my_image.paste(chrome_item.appearance, (chrome_item.position[0], chrome_item.position[1]),chrome_item.appearance)
-        my_image.paste(github_item.appearance, (github_item.position[0], github_item.position[1]),github_item.appearance)
+        #my_image.paste(chrome_item.appearance, (chrome_item.position[0], chrome_item.position[1]),chrome_item.appearance)
+        #my_image.paste(github_item.appearance, (github_item.position[0], github_item.position[1]),github_item.appearance)
         
+        for item in items:
+            if item.state != 'get':
+                my_image.paste(item.appearance, (item.position[0], item.position[1]),item.appearance)
+            if item.getItem(laptop):
+                items.remove(item)
+                print(item.state)
+                break
+            
+            
         
         for enemy in enemys:
             if enemy.state != 'die':
@@ -147,13 +162,24 @@ def main():
             if db_bullet.state !='hit':
                 my_draw.rectangle(tuple(db_bullet.position), outline = db_bullet.outline, fill = (235, 51, 36))
             else:
-                db_bullets.remove(db_bullet)
-                                        
+                db_bullets.remove(db_bullet)                         
+        
         for bullet in bullets:
             if bullet.state != 'hit':
                 my_draw.rectangle(tuple(bullet.position), outline = bullet.outline, fill = (0, 0, 255))
             else:
-                bullets.remove(bullet)             
+                bullets.remove(bullet)
+                
+        for health in health_list:
+            if laptop.health == 3:
+                my_image.paste(health.appearance, (health.position[0], health.position[1]),health.appearance)
+            if laptop.health == 2:
+                health_list.pop(-1)
+            if laptop.health == 1:
+                health_list.pop(-1)
+            if laptop.health == 0:
+                health_list.pop(-1)    
+                     
         joystick.disp.image(my_image)        
 
 if __name__ == '__main__':
