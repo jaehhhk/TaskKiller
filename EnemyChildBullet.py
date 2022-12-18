@@ -1,21 +1,21 @@
 import numpy as np
 
-class Bullet:
+class EnemyChildBullet:
     def __init__(self, position, command):
         self.appearance = 'rectangle'
-        self.speed = 10
-        self.damage = 10
-        self.position = np.array([position[0]-2, position[1]-2, position[0]+2, position[1]+2])
+        self.speed = 5
+        self.damage = 20
+        self.position = np.array([position[0]-1, position[1]-1, position[0]+1, position[1]+1])
         self.direction = {'up' : False, 'down' : False, 'left' : False, 'right' : False, 'static' : False}
         self.state = None
-        self.outline = "#0000FF"
-        if command['up_pressed']:
+        self.outline = "#EB3324"
+        if command == 'up_pressed':
             self.direction['up'] = True
-        if command['down_pressed']:
+        if command == 'down_pressed':
             self.direction['down'] = True
-        if command['right_pressed']:
+        if command == 'right_pressed':
             self.direction['right'] = True
-        if command['left_pressed']:
+        if command == 'left_pressed':
             self.direction['left'] = True
         # if command['A_pressed']:
         #     self.direction['static'] = True
@@ -35,6 +35,7 @@ class Bullet:
         if self.direction['left']:
             self.position[0] -= self.speed
             self.position[2] -= self.speed
+
             
         if self.direction['right']:
             self.position[0] += self.speed

@@ -1,6 +1,6 @@
 import numpy as np
 
-class Bullet:
+class OOPBullet:
     def __init__(self, position, command):
         self.appearance = 'rectangle'
         self.speed = 10

@@ -12,6 +12,10 @@ from EnemyDB import EnemyDB
 from EnemyESW import EnemyESW
 from EnemyOOP import EnemyOOP
 from EnemySYSPRO import EnemySYSPRO
+from SYSPROBullet import SYSPROBullet
+from EnemyChildBullet import EnemyChildBullet
+from OOPBullet import OOPBullet
+from ESWBullet import ESWBullet
 from Bullet import Bullet
 from Character import Character
 from ChromeItem import ChromeItem
@@ -48,7 +52,16 @@ def main():
     #my_image.paste(enemy_boss_image, (70,0))
     #my_image.paste(laptop, (100, 200))
     
+    # 캐릭터 총알 리스트
     bullets = []
+    
+    # 적들 총알 리스트
+    db_bullets = []
+    oop_bullets = []
+    esw_bullets = []
+    syspro_bullets = []
+    
+    
     joystick.disp.image(my_image)
     laptop = Character(joystick.width, joystick.height)
     my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
@@ -56,6 +69,7 @@ def main():
     while True:
 
         command = {'move': False, 'up_pressed': False , 'down_pressed': False, 'left_pressed': False, 'right_pressed': False, 'A_pressed' : False}
+        command_list  = [' ', ' ', ' ', ' ', ' ', ' ', 'down_pressed', ' ', ' ' , ' ' , ' ', ' ', ' ', 'down_pressed', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
         
         
         if not joystick.button_U.value:  # up pressed
@@ -83,6 +97,22 @@ def main():
         for bullet in bullets:
             bullet.collision_check(enemys)
             bullet.move()
+        
+        print(command_list[rd.randrange(len(command_list))])
+        db_bullet = EnemyChildBullet(enemy_DB.center, command_list[rd.randrange(len(command_list))])
+        esw_bullet = EnemyChildBullet(enemy_ESW.center, command_list[rd.randrange(len(command_list))])
+        syspro_bullet = EnemyChildBullet(enemy_SYSPRO.center, command_list[rd.randrange(len(command_list))])
+        oop_bullet = EnemyChildBullet(enemy_OOP.center, command_list[rd.randrange(len(command_list))])
+                                
+        
+        db_bullets.append(db_bullet)
+        db_bullets.append(esw_bullet)
+        db_bullets.append(syspro_bullet)
+        db_bullets.append(oop_bullet)
+        for child_bullet in db_bullets:
+            child_bullet.move()
+            
+            #bullet.collision_check(enemys)
 
         
         my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
@@ -100,10 +130,12 @@ def main():
             if enemy.state != 'die':
                 my_image.paste(enemy.appearance, (enemy.position[0], enemy.position[1]),enemy.appearance)
             elif enemy.state == 'die':
-                print(enemy)
                 enemys.remove(enemy)
                 break
-            
+        
+        for db_bullet in db_bullets:
+            if db_bullet.state !='hit':
+                my_draw.rectangle(tuple(db_bullet.position), outline = db_bullet.outline, fill = (235, 51, 36))
         
         for bullet in bullets:
             if bullet.state != 'hit':
