@@ -29,11 +29,13 @@ def main():
     github_item = GithubItem(item_y_position, item_x_position)
     
     enemy_boss = EnemyBoss((80, 30))
-    enemy_DB = EnemyDB((10, 50))
-    enemy_SYSPRO = EnemySYSPRO((70, 50))
-    enemy_ESW = EnemyESW((130, 50))
-    enemy_OOP = EnemyOOP((190, 50))
+    enemy_DB = EnemyDB((30, 75))
+    enemy_SYSPRO = EnemySYSPRO((90, 75))
+    enemy_ESW = EnemyESW((150, 75))
+    enemy_OOP = EnemyOOP((210, 75))
     
+    enemys = [enemy_DB, enemy_SYSPRO, enemy_ESW, enemy_OOP]
+    items = [chrome_item, github_item]
     
     joystick = Joystick()
     my_image = Image.new("RGB", (joystick.width, joystick.height))
@@ -79,31 +81,41 @@ def main():
             
         laptop.move(command)
         for bullet in bullets:
-            #bullet.collision_check(enemys_list)
+            bullet.collision_check(enemys)
             bullet.move()
 
         
         my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(0, 0, 0, 0))
         my_image.paste(enemy_boss.appearance, (enemy_boss.position[0], enemy_boss.position[1]),enemy_boss.appearance)
-        my_image.paste(enemy_DB.appearance, (enemy_DB.position[0], enemy_DB.position[1]),enemy_DB.appearance)
-        my_image.paste(enemy_SYSPRO.appearance, (enemy_SYSPRO.position[0], enemy_SYSPRO.position[1]),enemy_SYSPRO.appearance)
-        my_image.paste(enemy_ESW.appearance, (enemy_ESW.position[0], enemy_ESW.position[1]),enemy_ESW.appearance)
-        my_image.paste(enemy_OOP.appearance, (enemy_OOP.position[0], enemy_OOP.position[1]),enemy_OOP.appearance)
+        # my_image.paste(enemy_DB.appearance, (enemy_DB.position[0], enemy_DB.position[1]),enemy_DB.appearance)
+        # my_image.paste(enemy_SYSPRO.appearance, (enemy_SYSPRO.position[0], enemy_SYSPRO.position[1]),enemy_SYSPRO.appearance)
+        # my_image.paste(enemy_ESW.appearance, (enemy_ESW.position[0], enemy_ESW.position[1]),enemy_ESW.appearance)
+        # my_image.paste(enemy_OOP.appearance, (enemy_OOP.position[0], enemy_OOP.position[1]),enemy_OOP.appearance)
         my_image.paste(laptop.appearance, (laptop.position[0], laptop.position[1]),laptop.appearance)
         my_image.paste(chrome_item.appearance, (chrome_item.position[0], chrome_item.position[1]),chrome_item.appearance)
         my_image.paste(github_item.appearance, (github_item.position[0], github_item.position[1]),github_item.appearance)
         
         
+        for enemy in enemys:
+            if enemy.state != 'die':
+                my_image.paste(enemy.appearance, (enemy.position[0], enemy.position[1]),enemy.appearance)
+            elif enemy.state == 'die':
+                print(enemy)
+                enemys.remove(enemy)
+                break
+            
+        
         for bullet in bullets:
             if bullet.state != 'hit':
                 if (command['A_pressed'] == True) and (command['up_pressed']  == False) and (command['down_pressed']  == False) and (command['right_pressed']  == False) and (command['left_pressed']  == False):
-                    print(len(bullets))
                     my_draw.rectangle(tuple(bullet.position), outline = bullet.outline, fill = (0, 0, 0, 0))
                     bullets.remove(bullet)
-                    
-                    
+                                       
                 my_draw.rectangle(tuple(bullet.position), outline = bullet.outline, fill = (0, 0, 255))
-        
+            else:
+                bullets.remove(bullet)
+                
+                
         joystick.disp.image(my_image)        
 
 if __name__ == '__main__':

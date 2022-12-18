@@ -52,7 +52,7 @@ class Bullet:
                 enemy.state = 'die'
                 self.state = 'hit'
 
-    def overlap(self, ego_position, other_position):
+    def overlap(self, bullet_position, enemy_position):
         '''
         두개의 사각형(bullet position, enemy position)이 겹치는지 확인하는 함수
         좌표 표현 : [x1, y1, x2, y2]
@@ -60,6 +60,6 @@ class Bullet:
         return :
             True : if overlap
             False : if not overlap
-        '''
-        return ego_position[0] > other_position[0] and ego_position[1] > other_position[1] \
-                 and ego_position[2] < other_position[2] and ego_position[3] < other_position[3]
+        '''   
+        #return bullet_position[1] < enemy_position[3] and enemy_position[2] < bullet_position[0]
+        return enemy_position[0] < bullet_position[2] < enemy_position[2] and bullet_position[1] < enemy_position[3]
