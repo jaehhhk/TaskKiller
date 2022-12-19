@@ -16,6 +16,4 @@ class ChromeItem:
         else: False
             
     def overlap(self, item_position, laptop_position):
-        # item_position[0] > laptop_position[0] and item_position[1] > laptop_position[1]\
-        # and item_position[2] < laptop_position[2] and item_position[3] < laptop_position[3]
          return laptop_position[0]< item_position[2] < laptop_position[2] and laptop_position[1] < item_position[3] < laptop_position[3]

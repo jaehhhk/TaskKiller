@@ -9,11 +9,8 @@ class Character:
         self.item = 0
         self.health = 3
         self.life = 'live'
-        self.position = np.array([width-32, height-32, width+32, height+32])
-        # 총알 발사를 위한 캐릭터 중앙 점 추가
+        self.position = np.array([width-32, height-32, width, height])
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
-        self.outline = "#FFFFFF"
-
     
     def check_life(self):
         if self.health <= 0:
@@ -22,11 +19,11 @@ class Character:
     def move(self, command = None):
         if command['move'] == False:
             self.state = None
-            self.outline = "#FFFFFF" #검정색상 코드!
+            self.outline = "#FFFFFF"
         
         else:
             self.state = 'move'
-            self.outline = "#FF0000" #빨강색상 코드!
+            self.outline = "#FF0000"
 
             if command['up_pressed']:
                 self.position[1] -= 5

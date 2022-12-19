@@ -16,12 +16,7 @@ class ItemBullet:
         if command['right_pressed']:
             self.direction['right'] = True
         if command['left_pressed']:
-            self.direction['left'] = True
-        # if command['A_pressed']:
-        #     self.direction['static'] = True
-            
-
-        
+            self.direction['left'] = True  
 
     def move(self):
         if self.direction['up']:
@@ -40,28 +35,16 @@ class ItemBullet:
             self.position[0] += self.speed
             self.position[2] += self.speed
         
-        # if self.direction['static']:
-        #     self.position[0] -= self.speed
-        #     self.position[2] += self.speed
             
     def collision_check(self, enemys):
         for enemy in enemys:
             collision = self.overlap(self.position, enemy.position)
             
             if collision:
-                enemy.health -= 3
-                if enemy.health == 0:
+                enemy.health -= 5   # 필살기 총알은 일반 총알에 5배 데미지
+                if enemy.health <= 0:
                     enemy.state = 'die'
                 self.state = 'hit'
 
     def overlap(self, bullet_position, enemy_position):
-        '''
-        두개의 사각형(bullet position, enemy position)이 겹치는지 확인하는 함수
-        좌표 표현 : [x1, y1, x2, y2]
-        
-        return :
-            True : if overlap
-            False : if not overlap
-        '''   
-        #return bullet_position[1] < enemy_position[3] and enemy_position[2] < bullet_position[0]
         return enemy_position[0] < bullet_position[2] < enemy_position[2] and bullet_position[1] < enemy_position[3]
